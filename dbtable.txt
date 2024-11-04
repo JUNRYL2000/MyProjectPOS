@@ -1,0 +1,76 @@
+-- Create Database
+CREATE DATABASE myprojectpos;
+
+-- Use the newly created database
+USE myprojectpos;
+
+-- Create deliverytransaction table
+CREATE TABLE deliverytransaction (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    OR_No VARCHAR(255) NOT NULL,
+    Total_Amount DECIMAL(10, 2) NOT NULL,
+    Delivery_Date DATETIME NOT NULL,
+    StoreID INT NOT NULL,
+    FOREIGN KEY (StoreID) REFERENCES store(StoreID)
+);
+
+-- Create deliverytransactiondetails table
+CREATE TABLE deliverytransactiondetails (
+    DetailID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL,
+    Cost DECIMAL(10, 2) NOT NULL,
+    Total_Cost DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (TransactionID) REFERENCES deliverytransaction(TransactionID),
+    FOREIGN KEY (ProductID) REFERENCES product(ProductID)
+);
+
+-- Create delivery_or table
+CREATE TABLE delivery_or (
+    OR_No VARCHAR(255) NOT NULL PRIMARY KEY,
+    id INT AUTO_INCREMENT,
+    DateTime DATETIME NOT NULL
+);
+
+-- Create product table
+CREATE TABLE product (
+    ProductID INT AUTO_INCREMENT PRIMARY KEY,
+    Description VARCHAR(255) NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Stock_Quantity INT NOT NULL
+);
+
+-- Create salesreceipt table
+CREATE TABLE salesreceipt (
+    Receipt_No VARCHAR(255) NOT NULL PRIMARY KEY,
+    id INT AUTO_INCREMENT,
+    DateTime DATETIME NOT NULL
+);
+
+-- Create salestransactiondetails table
+CREATE TABLE salestransactiondetails (
+    SaleDetailID INT AUTO_INCREMENT PRIMARY KEY,
+    SaleTransactionID INT NOT NULL,
+    ProductID INT NOT NULL,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Total_Amt DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (SaleTransactionID) REFERENCES salesreceipt(id),
+    FOREIGN KEY (ProductID) REFERENCES product(ProductID)
+);
+
+-- Create store table
+CREATE TABLE store (
+    StoreID INT AUTO_INCREMENT PRIMARY KEY,
+    StoreName VARCHAR(255) NOT NULL,
+    Location VARCHAR(255) NOT NULL
+);
+
+-- Create users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    user_type ENUM('admin', 'staff') NOT NULL
+);
