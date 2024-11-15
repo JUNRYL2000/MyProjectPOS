@@ -15,42 +15,103 @@ if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'admin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Admin Dashboard</title>
-    
 </head>
 <body>
 <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff6d00, #ff9201, #ffab41, #ff6d00);
-            height: 100vh; /* Full screen height */
-            margin: 0;
-           
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background-color: white;
+        color: #6464AF;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 2em;
+        margin: 20px 0;
+        color: #6464AF;
+    }
+
+    /* Navigation Styles */
+    nav {
+        background-color: #6464AF;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between; /* Push menu to the left and text to the right */
+        align-items: center; /* Vertically center all elements in the nav */
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column; /* Stack the menu items vertically */
+       
+    }
+
+    .menu a {
+        color: white;
+        width: 100%;
+        display: block;
+        text-decoration: none;
+        padding: 20px;
+        margin: 5px 10px;
+        font-size: 1.4em;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+    }
+
+    .menu a:hover {
+        background-color: white;
+        color: #6464AF;
+        font-weight: bold;
+    }
+
+    /* Menu Icons */
+    .menu a i {
+        margin-right: 8px;
+    }
+
+    /* Right-aligned text */
+    .text {
+        margin-right: 10%;
+        color: white; /* Adjust color as needed */
+        font-size: 4.5em;
+        font-weight: bold;
+        text-align: right; /* Align text to the right */
+    }
+
+    .text .typing {
+        color: white; /* Typing animation color */
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        nav {
+            text-align: center;
+            flex-direction: column; /* Stack the nav content vertically on small screens */
         }
-        .menu a {
-            color: white;
-            text-decoration: none;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            border-radius: 7px;
-            transition: background 0.3s, transform 0.2s; /* Smooth transitions */
-            margin-top: 20px;
-           
+
+        .menu {
+            flex-direction: row; /* Menu items will align horizontally */
+            justify-content: center;
         }
-        .menu a:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Light hover effect */
-            transform: scale(1.05); /* Slightly enlarge on hover */
+
+        .text {
+            margin-top: 20px; /* Add space if necessary */
         }
-        .menu i {
-            margin-right: 10px; /* Space between icon and text */
-        }
-        </style>
+    }
+
+</style>
 
 <h1>Welcome to the Admin Dashboard</h1>
+
 <nav>
-    <ul>
     <div class="menu">
         <a href="dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
         <a href="sales.php"><i class="fas fa-shopping-cart"></i>Sales Management</a>
@@ -62,8 +123,21 @@ if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'admin') {
         <a href="report.php"><i class="fas fa-file-alt"></i>Reports</a>
         <a href="login.php"><i class="fas fa-sign-out-alt"></i>Log Out</a>
     </div>
-    </ul>
+    <div class="text">
+        <span class="typing"></span>
+    </div>
 </nav>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+<script>
+    var typing = new Typed(".typing", {
+        strings: ["Hi, Have A Good Day!"],
+        typeSpeed: 150,
+        backSpeed: 60,
+        loop: true
+    });
+</script>
 
 </body>
 </html>

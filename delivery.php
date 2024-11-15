@@ -146,7 +146,7 @@ session_start(); // Ensure session is started to handle cart data
 /* General Styling */
 body {
     font-family: 'Verdana', sans-serif;
-    background: linear-gradient(135deg, #2c3e50, #3498db);
+    background: linear-gradient(135deg, #6464af, #8585c7);
     color: #333;
     margin: 0;
     padding: 20px;
@@ -178,7 +178,7 @@ h1, h2, h3 {
     position: absolute;
     margin-left: 100%;
     padding: 10px;
-    background: lightgray;
+    background: white;
     width: 20%;
     margin-right: 15px;
     margin-top: 15px;
@@ -187,24 +187,24 @@ input[type="text"], input[type="number"], input[type="date"], select {
     width: calc(80% - 5px);
     padding: 10px;
     margin: 6px 0;
-    border: 2px solid #ccc;
+    border: 3px solid #ccc;
     border-radius: 4px;
-    weight: bold;
+    font-weight: bold;
     margin-left: 20px;
     font-size: 18px;
     color: solid black;
 }
 select {
-    width:  ;
+    width: 275px;
     padding: 10px;
     margin: 6px 0;
-    border: 2px solid #ccc;
+    border: 3px solid #ccc;
     border-radius: 4px;
     weight: bold;
     margin-left: 20px;
 }
 button {
-    background-color: #4CAF50;
+    background-color:#6464af;
     color: white;
     border: none;
     padding: 10px 12px;
@@ -215,7 +215,7 @@ button {
     margin-left: 20px;
 }
 button:hover {
-    background-color: #45a049;
+    background-color: #3f3f8f;
 }
 table {
     width: 100%;
@@ -230,6 +230,7 @@ table {
     background-color: #fff;
 }
 table th, table td {
+    color: black;
     padding: 12px;
     text-align: ;
     border-bottom: 1px solid #ddd;
@@ -237,10 +238,10 @@ table th, table td {
 th, td {
     padding: 12px;
     text-align: left;
-    background-color: gray;
+    background-color: lightgray;
 }
 th {
-    background-color: #4CAF50;
+    background-color: #6464af;
     color: white;
     font-size: 25px;
     font-weight: bold;
@@ -285,10 +286,10 @@ span {
 /* Back to Dashboard Button */
 .container3 a button {
     margin-top: 10px;
-    background-color: #2196F3;
+    background-color: #6464af;
 }
 .container3 a button:hover {
-    background-color: #1976D2;
+    background-color: #4f4fa5;
 }
 </style>
 
