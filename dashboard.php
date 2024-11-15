@@ -5,7 +5,6 @@ $dbname = 'myprojectpos';
 $username = 'root'; // Change if necessary
 $password = 'root'; // Change if necessary
 
-
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,6 +17,22 @@ try {
     $delivery_query = $pdo->query("SELECT Delivery_Date, Total_Amount FROM deliverytransaction");
     $delivery_data = $delivery_query->fetchAll(PDO::FETCH_ASSOC);
 
+    // Fetch total number of customers
+    $customer_query = $pdo->query("SELECT COUNT(*) AS total_customers FROM customer");
+    $customer_data = $customer_query->fetch(PDO::FETCH_ASSOC)['total_customers'];
+
+    // Fetch total users (admin and cashier)
+    $user_query = $pdo->query("SELECT COUNT(*) AS total_users FROM users");
+    $user_data = $user_query->fetch(PDO::FETCH_ASSOC)['total_users'];
+
+    // Fetch total sales amount
+    $total_sales_query = $pdo->query("SELECT SUM(SaleTotal_amount) AS total_sales_amount FROM saletransaction");
+    $total_sales = $total_sales_query->fetch(PDO::FETCH_ASSOC)['total_sales_amount'];
+
+    // Fetch total deliveries amount
+    $total_deliveries_query = $pdo->query("SELECT SUM(Total_Amount) AS total_deliveries_amount FROM deliverytransaction");
+    $total_deliveries = $total_deliveries_query->fetch(PDO::FETCH_ASSOC)['total_deliveries_amount'];
+
 } catch (PDOException $e) {
     echo 'Connection failed: ' . $e->getMessage();
 }
@@ -28,7 +43,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report</title>
+    <title>Dashboard</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,8 +56,9 @@ try {
             font-size: 50px;
             color: #4CAF50;
         }
-        .summary {
+        .dashboard-summary {
             text-align: center;
+            padding: 20px;
         }
         .summary-icon {
             font-size: 2em;
@@ -61,32 +77,36 @@ try {
 <body>
 
     <div class="container mt-5">
+        <h1 class="text-center mb-4">Dashboard</h1>
+
         <!-- Summary section with icons -->
         <div class="row">
-            <div class="col-md-4">
-                <div class="summary">
+            <div class="col-md-3">
+                <div class="dashboard-summary bg-light border rounded p-3">
                     <span class="summary-icon"><i class="bi bi-cart-check-fill"></i></span>
                     <div class="summary-title">Total Sales</div>
                     <div><?php echo count($sales_data); ?> Transactions</div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="summary">
+            <div class="col-md-3">
+                <div class="dashboard-summary bg-light border rounded p-3">
+                    <span class="summary-icon"><i class="bi bi-cash-stack"></i></span>
+                    <div class="summary-title">Total Sales Amount</div>
+                    <div><?php echo number_format($total_sales, 2); ?> PHP</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="dashboard-summary bg-light border rounded p-3">
                     <span class="summary-icon"><i class="bi bi-truck"></i></span>
                     <div class="summary-title">Total Deliveries</div>
                     <div><?php echo count($delivery_data); ?> Transactions</div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="summary">
-                    <span class="summary-icon"><i class="bi bi-cash-stack"></i></span>
-                    <div class="summary-title">Total Revenue</div>
-                    <div>
-                        <?php
-                        $total_sales = array_sum(array_column($sales_data, 'SaleTotal_amount'));
-                        echo "₱" . number_format($total_sales, 2);
-                        ?>
-                    </div>
+            <div class="col-md-3">
+                <div class="dashboard-summary bg-light border rounded p-3">
+                    <span class="summary-icon"><i class="bi bi-box-seam"></i></span>
+                    <div class="summary-title">Total Deliveries Amount</div>
+                    <div><?php echo number_format($total_deliveries, 2); ?> PHP</div>
                 </div>
             </div>
         </div>
