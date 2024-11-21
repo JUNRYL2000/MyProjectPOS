@@ -79,112 +79,145 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <style>
-body {
-    font-family: 'Verdana', sans-serif;
-    background: linear-gradient(135deg, #2c3e50, #3498db);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin-top: -30px;
-}
-.login-container {
-    background-color: #fff;
-    color: #333;
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    width: 350px; /* Set width to match modal */
-    transform: translateZ(0);
-    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    margin-top:
-}
-.login-container:hover {
-    transform: translateY(-10px);
-}
-h2 {
-    font-size: 36px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
-    margin-top: -10px;
-}
-input[type="text"], input[type="password"], select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-    font-size: 16px;
-    color: #333;
-}
-button {
-    background-color: #1abc9c;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-top: 15px;
-    font-size: 18px;
-    border-radius: 5px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    width: 100%;
-}
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-}
-button:active {
-    transform: scale(0.98);
-}
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    perspective: 1000px;
-}
-.modal-content {
-    background-color: #fff;
-    color: #333;
-    border-radius: 15px;
-    padding: 40px; /* Match padding with login-container */
-    position: relative;
-    width: 350px; /* Set width to match login-container */
-    height: 400px;
-    margin: 15% auto; /* Center the modal */
-    transform: translateZ(0);
-    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
-}
-.close {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-.close:hover {
-    color: #e74c3c;
-}
-    @media (max-width: 768px) {
-.login-container, .modal-content {
-width: 90%; /* Adjust width for smaller screens */
-}
-}
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #a9a9e1; 
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            color:#4c4c9f;
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
+            padding: 40px 30px;
+            margin-top: 60px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 40px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%; 
+            padding: 10px;
+            margin: 10px 0;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            box-sizing: border-box; 
+        }
+        button {
+            width: 80%;
+            padding: 12px;
+            background-color:#474785;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            cursor: pointer;
+            margin-top: 30px;
+            margin-left: 47px;
+        }
+
+        button:hover {
+            background-color:#8484cd;
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .show-password {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .show-password input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Error Message Styles */
+        .modal p {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 18px;
+            font-weight: bold;
+        }
     </style>
 <body>
-<h1>Boning Store</h1>
+<h1><div class="text">
+       <span class="typing"></span>
+    </div></h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+<script>
+    var typing = new Typed(".typing", {
+        strings: ["Bossing Store"],
+        typeSpeed: 150,
+        backSpeed: 60,
+        loop: true
+    });
+</script>
+
 <div class="login-container">
 <h2>Login</h2>
 <form method="post">
@@ -194,7 +227,6 @@ width: 90%; /* Adjust width for smaller screens */
     <input type="checkbox" onclick="myFunction()">Show Password
     <button type="submit" name="login">Login</button>
 </form>
-</div>
 
 <script>
     function myFunction() {
@@ -209,7 +241,7 @@ width: 90%; /* Adjust width for smaller screens */
 
 <!-- Button to open the modal -->
 <button id="openModal">Register</button>
-
+</div>
 <!-- The Modal -->
 <div id="registrationModal" class="modal">
     <div class="modal-content">

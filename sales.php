@@ -227,42 +227,52 @@ if (isset($_POST['remove_item'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Sales</title>
-    <style>
-.container1 {
-    width: 65%;
-    background: gray;
+<style>
+    .container1 {
+    width: 55%;
+    background: lightgray;
     padding: 10px;
-    margin-left: 10px;
-}
+    margin-left: 50px;
+    }
     .container2{
     width: 66.2%;
     background: lightgray;
     margin-left: 10px;
-}
+    }
     .container3{
-    right: 0;
-    top: 0;
+    right: 20px;
+    top: 20px;
     width: 50%;
     position: absolute;
-    margin-left: 100%;
     padding: 10px;
     background: lightgray;
-    width: 30%;
+    width: 25%;
     margin-right: 15px;
     margin-top: 15px;
     
-}
-input[type="text"], input[type="number"], input[type="date"] {
+    }
+    input[type="text"], input[type="number"], input[type="date"] {
     width: calc(70% - 10px);
     padding: 10px;
-    margin: 6px 0;
+    margin: 6px;
     border: 2px solid gray;
     border-radius: 4px;
     font-size: 18px;
-    weight: bold;
-    margin-left: 20px;
-}
-.table {
+    font-weight: bold;
+    margin-left: 50px;
+    height: 20px;
+    }
+    input[type="text1"]{
+    width: 70%;
+    height: 40px;
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 30px;
+    border: 3px solid gray;
+    margin-top: 5px;
+
+    }
+    .table {
     width: 60%;
     background-color: #fff;
     padding: 20px;
@@ -270,43 +280,42 @@ input[type="text"], input[type="number"], input[type="date"] {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 2px;
    
-}
-table {
+    }   
+    table {
     width: 93%;
     border-collapse: separate;
     margin: 0;
     margin-left: 3%;
     margin-top: 20px;
     color: black;
-}
-table td {
+    }
+    table td {
     padding: 12px;
     text-align: left;
     border-bottom: 5px solid #ddd;
     text-align: center;
-}
-table th {
+    }
+    table th {
     background-color:  #ffab41;
     font-size: 25px;
     font-weight: bold;
     text-align: center;
     
     
-}
-table td, input[type="text"]{
+    }
+    table td, input[type="text"]{
     font-size: 27px;
     font-weight: bold;
     color: black;
-}
-.result, input[type="number"], input[type="hidden"]{
+    }
+    .result, input[type="number"], input[type="hidden"]{
     font-size: 20px;
     font-weight: bold;
     color: black;
-    margin-left: 10px;
-    margin-left: 18px;
+    margin-left: 50px;
     width: calc(70% - 10px);
-}
-#running_total {
+    }
+    #running_total {
     font-weight: bold;
     font-size: 25px;
     color: #333;
@@ -315,92 +324,104 @@ table td, input[type="text"]{
     background-color: #f4f7fc;
     border: none;
     margin-left: 5px; /* Added space between ₱ and total */
-}
-.run{
+    }
+    .run{
     font-size: 30px;
     font-weight: bold;
     color: solid black;
-}
-td span {
+    }
+    td span {
     font-weight: bold;
     font-size: 30px;
     color: #333;
-}
-#change_display {
+    }
+    #change_display {
     margin-top: 10px;
     font-weight: bold;
     font-size: 30px;
     color: black;
-}
-button {
-    background-color:  #ffab41;
-    color: black;
+    }
+    button {
+    background-color:  #6464AF;
+    color: white;
     border: none;
     padding: 10px 12px;
     cursor: pointer;
     border-radius: 4px;
     font-weight: bold;
-    width: 120px;
     font-size: 18px;
     margin-left: 20px;
-}
-button:hover {
+    }
+    button[type="submit1"]{
+    background-color:  #6464AF;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 40px;
+    margin-bottom: 10px;
+    width: 100px;
+    }
+    button:hover {
     background-color:  #ff9201;
 
-}
-td button {
+    }
+    td button {
     background-color: #FF4F41;
-}
-td button:hover {
+    }
+    td button:hover {
     background-color: red;
-}
-body {
+    }
+    body {
     font-family: Arial', sans-serif;
     padding: 20px;
     color: #333;
-    background: linear-gradient(to right, #ff6d00, #ff9201, #ffab41, #ff6d00);
+    background: linear-gradient(135deg, #6464af, #8585c7);
     height: 100vh; /* Full screen height */
     margin: 0;
-}
-h1, {
+    }
+    h1 {
+    color: black;
+    font-weight: bold;
+    font-size: 40px;
+    margin-left: 500px;
+    margin-top: 20px
+    }
+    h2, {
     color: black;
     font-weight: bold;
     font-size: 35px;
     margin-left: 500px;
     margin-top: 20px
-}
-h2, {
-    color: black;
-    font-weight: bold;
-    font-size: 35px;
-    margin-left: 500px;
-    margin-top: 20px
-}
-h3 {
+    }
+    h3 {
     color: black;
     font-weight: bold;
     font-size: 35px;
     margin-left: 500px;
     margin-top: 20px
     
-}
-label {
+    }
+    label {
     font-size: 20px;
     color: black;
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
-}
-strong {
+    }
+    strong {
     font-weight: bold;
     margin-left: 5%;
     font-size: 30px;
-}
-p {
+    }
+    p {
     font-size: 50px;
     font-weight: bold;
     margin-top: 15px;
-}
+    }
 </style>
 </head>
 <body>
@@ -431,8 +452,8 @@ p {
 <div class='container1'>   
     <!-- Search form -->
         <form method="POST" action="">
-        <input type="text" name="searchTerm" placeholder="Enter product name">
-        <button type="submit" name="search">Search</button>
+        <input type="text1" name="searchTerm" placeholder="Enter product name">
+        <button type="submit1" name="search">Search</button>
         </form>
     
 <!-- Display search results -->
@@ -645,7 +666,16 @@ p {
             <p style="font-size: 30px; font-weight: bold; color: #333; text-align: left;"><strong>Total Amount:</strong> ₱ <?php echo number_format($_SESSION['receipt']['total_amount'], 2); ?></p>
             <p style="font-size: 30px; font-weight: bold; color: #333; text-align: left;"><strong>Received Amount:</strong> ₱ <?php echo number_format($_SESSION['receipt']['received_amount'], 2); ?></p>
             <p style="font-size: 30px; font-weight: bold; color: #333; text-align: left;"><strong>Change:</strong> ₱ <?php echo $_SESSION['receipt']['change']; ?></p>
-            <button onclick="printReceipt()">Print Receipt</button>
+            
+            <style>
+                @media print {
+                .print-button {
+                display: none;
+                }
+            }
+            </style>
+
+            <button class="print-button" onclick="printReceipt()">Print Receipt</button>
         </div>
     </div>
 

@@ -1,196 +1,151 @@
 <?php
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "myprojectpos";
+require 'db.php';  // Ensure db.php has the correct connection settings
+session_start();
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if the user is logged in and is an admin
+if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit();
 }
-
-// Delivery Report
-function getDeliveryReport($conn) {
-    $sql = "
-        SELECT dt.TransactionID, dt.Delivery_Date, p.Description, dtd.Quantity, dtd.Cost, dtd.Total_Cost, s.StoreName, dt.OR_No
-        FROM deliverytransaction AS dt
-        JOIN deliverytransactiondetails AS dtd ON dt.TransactionID = dtd.TransactionID
-        JOIN product AS p ON dtd.ProductID = p.ProductID
-        JOIN store AS s ON dt.StoreID = s.StoreID
-        ORDER BY dt.Delivery_Date DESC
-    ";
-
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        echo "<h2>Delivery Report</h2>";
-        echo "<table border='1'>";
-        echo "<tr><th>Transaction ID</th><th>Delivery Date</th><th>Description</th><th>Quantity</th><th>Cost</th><th>Total Cost</th><th>Store Name</th><th>OR No</th></tr>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                <td>{$row['TransactionID']}</td>
-                <td>{$row['Delivery_Date']}</td>
-                <td>{$row['Description']}</td>
-                <td>{$row['Quantity']}</td>
-                <td>{$row['Cost']}</td>
-                <td>{$row['Total_Cost']}</td>
-                <td>{$row['StoreName']}</td>
-                <td>{$row['OR_No']}</td>
-            </tr>";
-        }
-        echo "</table>";
-    } else {
-        echo "No delivery records found.";
-    }
-}
-
-// Sales Report
-function getSalesReport($conn) {
-    $sql = "
-        SELECT st.Sales_date, p.Description, std.Quantity, std.Price, std.Total_Amt, sr.Receipt_No
-        FROM saletransaction AS st
-        JOIN salestransactiondetails AS std ON st.SaleTransactionID = std.SaleTransactionID
-        JOIN product AS p ON std.ProductID = p.ProductID
-        JOIN salesreceipt AS sr ON st.Receipt_No = sr.Receipt_No
-        ORDER BY st.Sales_date DESC
-    ";
-
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        echo "<h2>Sales Report</h2>";
-        echo "<table border='1'>";
-        echo "<tr><th>Sales Date</th><th>Description</th><th>Quantity</th><th>Price</th><th>Total Amount</th><th>Receipt No</th></tr>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                <td>{$row['Sales_date']}</td>
-                <td>{$row['Description']}</td>
-                <td>{$row['Quantity']}</td>
-                <td>{$row['Price']}</td>
-                <td>{$row['Total_Amt']}</td>
-                <td>{$row['Receipt_No']}</td>
-            </tr>";
-        }
-        echo "</table>";
-    } else {
-        echo "No sales records found.";
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS Reports</title>
+    <title>Admin Reports</title>
+
+    <!-- Include Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
-        /* Modal styling */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover, .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+   /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+/* Header Styling */
+h1 {
+    margin-top: 10%;
+    color: #6464af;
+    font-size: 50px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 20px;
+    align-items: center;
+    width: 100%; /* Full-width container */
+    max-width: 300px; /* Set max width for larger screens */
+}
+
+/* Report Button Styling */
+.report-button {
+    background-color: #6464af;
+    color: white;
+    text-decoration: none;
+    padding: 14px 0;
+    width: 100%; /* Full width for consistent sizing */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center text and icons */
+    font-size: 18px; /* Increase font size for readability */
+    font-weight: 500;
+    height: 60px; /* Fixed button height for consistency */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.report-button i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* Button Specific Colors */
+.sales-report {
+    background-color: #6464af;
+}
+
+.delivery-report {
+    background-color:#6464af; /* Darker shade for distinction */
+}
+
+.back-menu {
+    background-color: #6464af;
+}
+
+/* Hover and Active Effects */
+.report-button:hover {
+    background-color: #5a5aa3; /* Slightly darker shade for hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.sales-report:hover,
+.back-menu:hover {
+    background-color: #5858a1;
+}
+
+.delivery-report:hover {
+    background-color: #424275;
+}
+
+.report-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .button-container {
+        width: 90%; /* Adjust button container for smaller screens */
+    }
+}
+
+
     </style>
 </head>
+
 <body>
+    <h1>Sales and Deliveries Reports</h1>
 
-<h1>POS Reports</h1>
-
-<!-- Buttons to trigger modals -->
-<button id="deliveryBtn">View Delivery Report</button>
-<button id="salesBtn">View Sales Report</button>
-
-<!-- Delivery Report Modal -->
-<div id="deliveryModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeDelivery">&times;</span>
-        <?php getDeliveryReport($conn); ?>
+    <div class="button-container">
+        <a href="salesreport.php" class="report-button sales-report" aria-label="View Sales Report">
+            <i class="fas fa-chart-line"></i> Sales Report
+        </a>
+        <a href="deliveryreport.php" class="report-button delivery-report" aria-label="View Delivery Report">
+            <i class="fas fa-truck"></i> Delivery Report
+        </a>
+        <a href="admin_dashboard.php" class="report-button back-menu" aria-label="Back to Admin Dashboard">
+            <i class="fas fa-arrow-left"></i> Back Menu
+        </a>
     </div>
-</div>
-
-<!-- Sales Report Modal -->
-<div id="salesModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeSales">&times;</span>
-        <?php getSalesReport($conn); ?>
-    </div>
-</div>
-
-<script>
-    // Get the modals
-    var deliveryModal = document.getElementById("deliveryModal");
-    var salesModal = document.getElementById("salesModal");
-
-    // Get the buttons that open the modals
-    var deliveryBtn = document.getElementById("deliveryBtn");
-    var salesBtn = document.getElementById("salesBtn");
-
-    // Get the <span> elements that close the modals
-    var closeDelivery = document.getElementById("closeDelivery");
-    var closeSales = document.getElementById("closeSales");
-
-    // When the user clicks the button, open the corresponding modal
-    deliveryBtn.onclick = function() {
-        deliveryModal.style.display = "block";
-    }
-
-    salesBtn.onclick = function() {
-        salesModal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    closeDelivery.onclick = function() {
-        deliveryModal.style.display = "none";
-    }
-
-    closeSales.onclick = function() {
-        salesModal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == deliveryModal) {
-            deliveryModal.style.display = "none";
-        }
-        if (event.target == salesModal) {
-            salesModal.style.display = "none";
-        }
-    }
-</script>
-
 </body>
-</html>
 
-<?php
-// Close connection
-$conn->close();
-?>
+</html>

@@ -18,11 +18,20 @@ if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'admin') {
 // Handle user activation/deactivation
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $userId = $_GET['id'];
-    $currentStatus = $_GET['action'] === 'activate' ? 1 : 0;
-    $stmt = $conn->prepare("UPDATE users SET status=? WHERE id=?");
-    $stmt->bind_param("ii", $currentStatus, $userId);
-    $stmt->execute();
-    $stmt->close();
+    if ($_GET['action'] === 'delete') {
+        // Delete the user from the database
+        $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        // Activate or deactivate the user
+        $currentStatus = $_GET['action'] === 'activate' ? 1 : 0;
+        $stmt = $conn->prepare("UPDATE users SET status=? WHERE id=?");
+        $stmt->bind_param("ii", $currentStatus, $userId);
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 
 // Fetch users from the database
@@ -42,38 +51,99 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #1abc9c;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .logout {
-            margin-top: 20px;
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
+      /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 20px;
+}
+
+h2 {
+    color: #6464AF;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #6464AF;
+    color: white;
+}
+
+td {
+    background-color: #fff;
+}
+
+/* Action Links */
+a {
+    color: #4A90E2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+/* Logout Button */
+.logout {
+    display: inline-block;
+    background-color: #6464AF;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.logout:hover {
+    background-color: #4A90E2;
+}
+
+/* Table Row Hover Effect */
+tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .logout {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -99,7 +169,10 @@ if (!$result) {
                     <td>{$user['username']}</td>
                     <td>{$user['user_type']}</td>
                     <td>$statusText</td>
-                    <td><a href=\"?action=$actionLink&id={$user['id']}\">$action</a></td>
+                    <td>
+                        <a href=\"?action=$actionLink&id={$user['id']}\">$action</a> |
+                        <a href=\"?action=delete&id={$user['id']}\" onclick=\"return confirm('Are you sure you want to delete this user?');\">Delete</a>
+                    </td>
                   </tr>";
         }
     } else {

@@ -79,7 +79,7 @@ if (!isset($_SESSION['username']) || $_SESSION['user_type'] !== 'admin') {
 
     /* Right-aligned text */
     .text {
-        margin-right: 10%;
+        margin-right: 15%;
         color: white; /* Adjust color as needed */
         font-size: 4.5em;
         font-weight: bold;

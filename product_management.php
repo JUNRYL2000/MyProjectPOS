@@ -69,55 +69,98 @@ $dashboard_url = $_SESSION['user_type'] === 'admin' ? 'admin_dashboard.php' : 'c
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management</title>
     <style>
-       /* Additional Styling */
-body {
+     /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    padding: 20px;
+}
+
+body {
+    background-color: #f4f4f9;
     color: #333;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 20px;
 }
 
 h2 {
+    color: #4e5d94;
     text-align: center;
-    color: #2c3e50;
-}
-
-/* Centering the form and table */
-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
     margin-bottom: 20px;
 }
 
-input[type="text"], input[type="number"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 200px;
-}
-
+/* Button Styling */
 button {
-    background-color: #3498db;
+    background-color: #4e5d94;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
+    margin-right: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    font-size: 14px;
+    text-align: center;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #3b4778;
 }
 
-/* Styling the table */
+/* Back Button */
+a button {
+    background-color: #6464A;
+    padding: 8px 16px;
+    margin-right: 0;
+    margin-left: 5%;
+    height: 42px;
+    margin-bottom: 20px;
+}
+
+a button:hover {
+    background-color: #3b4778;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    width: 25%;
+    height: 45px;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 3px solid #ddd;
+    font-size: 14px;
+    margin-left: 5%;
+}
+
+form button {
+    width: 10%;
+    padding: 10px;
+    margin-top: 2px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-left: 5%;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus {
+    border-color: #4e5d94;
+    outline: none;
+}
+
+/* Table Styling */
 table {
-    margin: 0 auto; /* Center the table */
-    width: 80%; /* Control the width of the table */
+    width: 90%;
+    margin: 20px auto;
     border-collapse: collapse;
-    background-color: white;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
@@ -127,91 +170,127 @@ th, td {
 }
 
 th {
-    background-color: #3498db;
+    background-color: #4e5d94;
     color: white;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2;
+td {
+    background-color: white;
 }
 
-a {
-    color: #e74c3c;
+table button {
+    background-color: #4e5d94;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+table button:hover {
+    background-color: #3b4778;
+}
+
+/* Delete Link Styling */
+table a {
+    color: white;
+    background-color: #e74c3c;
+    padding: 8px 16px;
+    border-radius: 5px;
     text-decoration: none;
+    display: inline-block;
 }
 
-a:hover {
-    text-decoration: underline;
+table a:hover {
+    background-color: #c0392b;
 }
 
-/* Modal Styling */
+/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding-top: 50px;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
 }
 
 .modal-content {
     background-color: white;
-    margin: auto;
+    margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
+    border-radius: 5px;
+    width: 30%;
 }
 
 .close {
     color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
+    float: right;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
-    color: #e74c3c;
+    color: black;
 }
 
-/* Button for Back to Dashboard */
-a button {
-    background-color: #1abc9c;
+.modal h2 {
+    color: #4e5d94;
+    text-align: center;
+}
+
+.modal input[type="text"],
+.modal input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 3px solid #ddd;
+    font-size: 14px;
+}
+
+.modal button {
+    padding: 10px 15px;
+    background-color: #4e5d94;
     color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 40%;
+    margin-left: 8px;
 }
 
-a button:hover {
-    background-color: #16a085;
+.modal button:hover {
+    background-color: #3b4778;
 }
 
 /* Responsive Design */
-@media screen and (max-width: 600px) {
+@media (max-width: 768px) {
+    form {
+        width: 100%;
+    }
+
     table {
         width: 100%;
     }
-    
-    form {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    input, button {
-        width: 100%;
-    }
-    
+
     .modal-content {
-        width: 90%;
+        width: 80%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    table th, table td {
+        font-size: 14px;
+        padding: 8px;
     }
 }
 
@@ -221,14 +300,13 @@ a button:hover {
 
 <h2>Inventory Management</h2>
 
-<!-- Back Button -->
 <a href="<?php echo $dashboard_url; ?>"><button>Back to Dashboard</button></a>
 
 <!-- Add Product Form -->
 <form method="post">
     <input type="text" name="description" placeholder="Product Description" required>
-    <input type="number" step="0.01" name="price" placeholder="Price" required>
-    <input type="number" name="stock_quantity" placeholder="Stock Quantity" required>
+    <input type="hidden" step="0.01" name="price" placeholder="Price" required>
+    <input type="hidden" name="stock_quantity" placeholder="Stock Quantity" required>
     <button type="submit" name="add_product">Add Product</button>
 </form>
 
@@ -275,7 +353,7 @@ a button:hover {
             <input type="text" name="edit_description" id="edit_description" required>
             <input type="number" step="0.01" name="edit_price" id="edit_price" required>
             <input type="number" name="edit_stock_quantity" id="edit_stock_quantity" required>
-            <button type="submit" name="edit_product">Update Product</button>
+            <button type="submit" name="edit_product">Update Product</button> 
         </form>
     </div>
 </div>

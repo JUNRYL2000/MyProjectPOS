@@ -11,28 +11,12 @@ if (!isset($_SESSION['username'])) {
 // Determine the dashboard redirect URL
 $dashboard_url = $_SESSION['user_type'] === 'admin' ? 'admin_dashboard.php' : 'cashier_dashboard.php';
 
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-}
-
-// Add customer
-if (isset($_POST['add_customer'])) {
-    $customer_name = $_POST['customer_name'];
-    $customer_address = $_POST['customer_address']; // Address field
-
-    $stmt = $conn->prepare("INSERT INTO customer (CustomerName, Address) VALUES (?, ?)");
-    $stmt->bind_param("ss", $customer_name, $customer_address);
-
-    if ($stmt->execute()) {
-        $success_message = "Customer added successfully!";
-    } else {
-        $error_message = "Error adding customer: " . $stmt->error;
-    }
 }
 
 // Edit customer
@@ -77,35 +61,66 @@ $customers_result = $conn->query("SELECT * FROM customer");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Management</title>
     <style>
-        /* General Body Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f7;
+       /* General Reset */
+* {
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
     color: #333;
-    text-align: center; /* Center the content inside the body */
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 20px;
 }
 
-/* Header Styles */
-h2, h3 {
-    color: #2c3e50;
+h2 {
+    color: #6464AF;
     text-align: center;
+    margin-bottom: 20px;
 }
 
+/* Button Styling */
+button {
+    background-color: #6464af;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-right: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 6%;
+}
+
+button:hover {
+    background-color: #6464af;
+}
+
+/* Success and Error Messages */
 p {
     text-align: center;
-    font-size: 1.1em;
-    margin: 10px 0;
+    font-weight: bold;
 }
 
-/* Center the Table */
+p[style*="color:green"] {
+    color: green;
+}
+
+p[style*="color:red"] {
+    color: red;
+}
+
+/* Table Styling */
 table {
-    margin: 20px auto; /* This will center the table horizontally */
-    width: 80%; /* Set a specific width for the table */
+    width: 90%;
     border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px auto;
+    margin-left: 6%;
+
 }
 
 th, td {
@@ -115,147 +130,110 @@ th, td {
 }
 
 th {
-    background-color: #3498db;
+    background-color: #6464AF;
     color: white;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Form Styles */
-form {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
+td {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #2c3e50;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-input[type="submit"] {
-    background-color: #1abc9c;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    width: 100%;
-}
-
-input[type="submit"]:hover {
-    background-color: #16a085;
-}
-
-/* Button Styles */
+/* Action Buttons */
 button {
-    background-color: #3498db;
+    background-color: #6464af;
     color: white;
     border: none;
     padding: 8px 12px;
+    margin-right: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    font-size: 14px;
+    margin-left: 6%;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: #5959cd;
 }
 
 /* Modal Styles */
 .modal {
-    display: none;
+    display: none; /* Hidden by default */
     position: fixed;
-    z-index: 1000;
+    z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding-top: 50px;
+    background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+    padding-top: 60px;
+    box-sizing: border-box;
 }
 
 .modal-content {
     background-color: white;
-    margin: auto;
+    margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
+    border-radius: 5px;
+    width: 50%;
+    box-sizing: border-box;
 }
 
-/* Close Button */
 .close {
     color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
+    float: right;
+    font-size: 28px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
-    color: #e74c3c;
+    color: black;
+    text-decoration: none;
 }
 
-/* Success and Error Message Styles */
-p[style='color:green;'] {
-    background-color: #dff0d8;
-    padding: 10px;
-    border-radius: 4px;
-    max-width: 500px;
-    margin: 20px auto;
-    text-align: center;
+/* Modal Header */
+h3 {
+    color: #6464AF;
+    margin-left: 6%;
+    font-size: 35px;
 }
 
-p[style='color:red;'] {
-    background-color: #f2dede;
-    padding: 10px;
-    border-radius: 4px;
-    max-width: 500px;
-    margin: 20px auto;
-    text-align: center;
+/* Form Inputs */
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 /* Responsive Design */
-@media screen and (max-width: 600px) {
-    .modal-content, form, table {
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .modal-content {
         width: 90%;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 6px 12px;
     }
 }
 
     </style>
-
 </head>
-
 <body>
 
     <h2>Customer Management</h2>
-
 
     <a href="<?php echo $dashboard_url; ?>"><button>Back to Dashboard</button></a>
     <br>
@@ -267,19 +245,6 @@ p[style='color:red;'] {
         echo "<p style='color:red;'>{$error_message}</p>";
     }
     ?>
-
-    <!-- Add New Customer -->
-  
-    <form action="customer.php" method="POST">
-    <h3>Add Customer</h3>
-        <label for="customer_name">Customer Name:</label>
-        <input type="text" id="customer_name" name="customer_name" required>
-        <br>
-        <label for="customer_address">Customer Address:</label>
-        <input type="text" id="customer_address" name="customer_address" required>
-        <br>
-        <input type="submit" name="add_customer" value="Add Customer">
-    </form>
 
     <!-- List of Customers -->
     <h3>Customer List</h3>
